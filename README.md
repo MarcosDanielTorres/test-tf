@@ -3,10 +3,12 @@
 </h1>
 
 
-## Tabla de contenidos
-- [**Introducción**](#introducción)
-- [**Instalación**](#instalación)
-- [**Consideraciones de diseño**](#consideraciones-de-diseño)
+## Index
+- [**Introduction**](#introduction)
+- [**Structure**](#structure)
+- [**Getting Started**](#getting-started)
+- [**Usage**](#usage)
+- [**Design Considerations**](#design-considerations)
 - [**Payable Endpoint**](#payable-endpoints)
     - [**Create payable**](#create-payable)
     - [**Unpaid payables**](#unpaid-payables)
@@ -14,21 +16,39 @@
     - [**Create transaction**](#create-transaction)
     - [**Get transactions**](#get-transactions)
 - [**Imagenes de ejemplo**](#imagenes-de-ejemplo)
-# Introducción
-Este proyecto resuelve el [desafio] proporcionado por [NewCombin] que busca evaluar conocimientos en la creación de Backends. 
+# Introduction
+This repository corresponds to the challenge Skybox provided for the DevOps Engineer position.
+The cluster has been set up and is being monitored through [Terraform], the [Terraform Provider for Docker], and bash for shell scripting. It can be scaled up horizontally with the help of a Load Balancer implemented through [Nginx], which uses round-robin and weighted round-robin algorithms to route traffic.
 
-Se implementa una REST API utilizando NodeJS para una versión súper simplificada de un proveedor de servicios de pago de impuestos.
+## Structure
+-  `src/`: This directory includes the source code used to create the "cluster" script. The structure was established by running "bashly init" since the script was developed with its aid.
+-  `template/`: In this folder, you'll find templates for creating the load balancer and web services. Once you open it, you'll notice a string that reads "REPLACEME". Keep this in mind as it will be useful when installing the cluster later on.
 
-## Instalación
+## Getting Started
 
-1. Instalar [node] y opcionalmente [mongo] para desarrollo.
-1. Descargar el proyecto con `git clone https://github.com/MarcosDanielTorres/NewCombin-BackendTest`
-1. Navegar hacia el directorio donde se clonó el repositorio.
-1. En una terminal, ejecutar el comando `npm install` para descargar los paquetes necesarios para ejecutar el proyecto.
-1. En una terminal, ejecutar el comando `npm start` o bien `npm run watch` para iniciar el servidor.
+1. Install [Terraform].
+2. Install [Docker].
+3. Clone the project: `git clone https://github.com/MarcosDanielTorres/skybox-challenge`
+4. To set up the cluster, simply run the command `./cluster install`. If you wish to specify the number of nodes to deploy, you may do so optionally (the default is 2).
+5. After step number 4. If you encounter an error about the docker provider when `terraform apply` is running. You might need to specify the host of the docker provider under:
+```
+provider "docker"{
+  host = "...COMPLETE HERE..."
+}
+```
+It may be useful to run `docker context ls`     
 
-## Consideraciones de diseño
-Se detalla brevemente algunas de las decisiones de diseño a la hora de realizar la REST API.
+6. Running ./cluster --help gives you a list of all possible commands. But to sum them up:
+  -  ./cluster install 4        Installs 4 web services and a load balancer. The load balancer is always included, making a total of 5 containers.
+  -  ./cluster stop             The command "stop" will halt all containers currently in operation within the cluster.
+  -  ./cluster start            This command will initiate all containers that are currently stopped within the cluster.
+  -  ./cluster status           It displays details on the running containers' status.
+  -  ./cluster delete           Removes all created resources.
+### Optional step:
+The `cluster` is a script created using [Bashly]. If you wish to regenerate the script you need to have `bashly` installed. Please refer to the official documentation for details. `bashly generate` creates the script named `cluster`.
+
+## Design Considerations
+Some of the design decisions when making the REST API are briefly detailed.
 
 Primero se crearon dos colecciones, una llamada Payable y otra llamada Transaction. Se optó por traducir los atributos de las colecciones al inglés, por lo tanto:
 * Payable:
@@ -255,7 +275,10 @@ Lista aquellas transacciones entre un período de fechas, acumulando por día.
 Por favor, dirigirse a la carpeta `images` donde se encuentran ejemplos de uso de los endpoints explayados anteriormente.
 
 
-[NewCombin]: https://newcombin.com/
-[desafio]: https://github.com/newcombin/devskillsback
-[node]: https://nodejs.org
-[mongo]: https://www.mongodb.com
+
+
+[Terraform]: https://nodejs.org
+[Docker]: https://www.docker.com/
+[Nginx]: https://www.nginx.com
+[Bashly]: https://bashly.dannyb.co
+[Terraform Provider for Docker]: https://github.com/kreuzwerker/terraform-provider-docker
