@@ -36,7 +36,7 @@ provider "docker"{
   host = "...COMPLETE HERE..."
 }
 ```
-It may be useful to run `docker context ls` 
+It may be useful to run `docker context ls`. (sometimes the host line can be empty, it will depend on the type of docker installation, in my case I use docker-desktop and it messed up for me on Linux but not on Windows.)
 
 8. After step 6 just go to `localhost:8080` and optionally run `docker ps` to check the infrastructure.
    
@@ -105,8 +105,8 @@ If you navigate to `src/` you can find the different variations of the `cluster`
 
 
 
-## Imagenes de ejemplo
-Por favor, dirigirse a la carpeta `images` donde se encuentran ejemplos de uso de los endpoints explayados anteriormente.
+## Screenshots
+Please, go to `images/` where you can find screenshots of the application running with 5 nodes (./cluster install 5)
 
 
 
