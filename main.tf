@@ -7,6 +7,9 @@ terraform {
   }
 }
 
+provider "docker" {
+    host = "unix:///home/marcos/.docker/desktop/docker.sock"
+}
 
 variable "size" {
   type        = number
@@ -14,9 +17,6 @@ variable "size" {
   default     = 2
 }
 
-provider "docker" {
-  host = "npipe:////.//pipe//docker_engine"
-}
 
 resource "docker_network" "skybox-ws-network" {
   name = "skybox-network"

@@ -1,0 +1,40 @@
+name: cluster
+help: Installs, starts, stops, deletes, and shows the status of the cluster.
+version: 0.1.0
+
+environment_variables:
+commands:
+- name: install
+  alias: i
+  help: Install/creates the cluster
+
+  args:
+  - name: nodes
+    default: "2"
+    help: 
+      Amount of nodes create. Each node have a web-service running. 
+    #flags:
+    #- long: --nodes
+    #  short: -n
+    #  arg: nodes
+    #  help: 
+    #    Amount of nodes create. Each node have a web-service running. 
+    #  default: "2"
+
+  examples:
+  - cluster install
+  - cluster install -n 3
+
+- name: start
+  alias: s
+  help: Starts the cluster
+
+- name: status
+  help: Status of the cluster
+
+- name: stop
+  help: Stops the cluster
+
+- name: delete
+  alias: d
+  help: Deletes the cluster
