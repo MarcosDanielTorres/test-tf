@@ -12,9 +12,6 @@
 - [**Payable Endpoint**](#payable-endpoints)
     - [**Create payable**](#create-payable)
     - [**Unpaid payables**](#unpaid-payables)
-- [**Transaction Endpoint**](#transaction-endpoints)
-    - [**Create transaction**](#create-transaction)
-    - [**Get transactions**](#get-transactions)
 - [**Imagenes de ejemplo**](#imagenes-de-ejemplo)
 # Introduction
 This repository corresponds to the challenge Skybox provided for the DevOps Engineer position.
@@ -47,8 +44,57 @@ It may be useful to run `docker context ls`
 ### Optional step:
 The `cluster` is a script created using [Bashly]. If you wish to regenerate the script you need to have `bashly` installed. Please refer to the official documentation for details. `bashly generate` creates the script named `cluster`.
 
+
 ## Design Considerations
-Some of the design decisions when making the REST API are briefly detailed.
+Some of the design decisions to solve the challenge are briefly detailed.
+
+I didn't use docker-compose because the instructions said that I needed to use the [Terraform Provider for Docker] which is the same it's used in the official documentation. This provider doesn't have the ability to incorporate docker-compose. If I had used docker-compose the networking component may have been easier. But still, the docker-compose.yml must have been created dynamically and I figured doing this was not the point of the challenge. So I went with creating multiple docker containers all running inside a network called `skybox-network` to be able to communicate (having everything on the `bridge` as it is by default in Docker, doesn't work for communicating using the name of the container inside `nginx.conf`).
+
+Every web service run inside a nginx container with its custom index.html file. To make this happen I've created a template folder where I stored templates for different images. When I run `./cluster install n` the script creates n folders corresponding to each web service inside the `build/` folder. Doing this allows me to have different versions for each microservice if needs be, so every service can have a different Dockerfile that defines it.
+Please check the `templates/` folder, in there you can see (in some of the files) a string called "REPLACEME" that will later get replaced when running `./cluster install n`.
+
+I have decided to use Nginx for both the balancer and the web services. Following below is the basic configuration of the load balancer:
+```
+http {
+    upstream all {
+        REPLACEME
+    }
+
+    server {
+        listen 8080;
+        location / {
+            proxy_pass http://all/;
+        }
+    }
+}
+
+events {}
+```
+
+After `./cluster install n`:
+```
+http {
+    upstream all {
+        server skybox-ws-1 weight=3;
+        server skybox-ws-2;
+        server skybox-ws-3;
+    }
+
+    server {
+        listen 8080;
+        location / {
+            proxy_pass http://all/;
+        }
+    }
+}
+
+events {}
+```
+
+
+If you navigate to `src/` you can find the different variations of the `cluster` script.
+
+
 
 Primero se crearon dos colecciones, una llamada Payable y otra llamada Transaction. Se optó por traducir los atributos de las colecciones al inglés, por lo tanto:
 * Payable:
