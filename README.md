@@ -12,7 +12,9 @@
 - [**Screenshots**](#screenshots)
 # Introduction
 This repository corresponds to the challenge Skybox provided for the DevOps Engineer position.
-The cluster has been set up and is being monitored through [Terraform], the [Terraform Provider for Docker], and bash for shell scripting. It can be scaled up horizontally with the help of a Load Balancer implemented through [Nginx], which uses round-robin and weighted round-robin algorithms to route traffic.
+
+
+The cluster has been set up using [Terraform], the [Terraform Provider for Docker], and bash for shell scripting. It can be scaled up horizontally with the help of a Load Balancer implemented through [Nginx], which uses round-robin and weighted round-robin algorithms to route traffic. It also supports stop, starts, delete, and status commands.
 
 ## Structure
 -  `src/`: This directory includes the source code used to create the "cluster" script. The structure was established by running "bashly init" since the script was developed with its aid.
